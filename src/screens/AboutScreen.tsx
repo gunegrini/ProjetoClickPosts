@@ -1,8 +1,12 @@
-// src/screens/AboutScreen.tsx
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Linking, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const AboutScreen = () => {
+  const handlePress = (url: string) => {
+    Linking.openURL(url);
+  };
+
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/fotogu.png')} style={styles.profileImage} />
@@ -12,6 +16,14 @@ const AboutScreen = () => {
       <Text style={styles.info}>Cursando Técnico em Desenvolvimento de Sistemas pela Etec</Text>
       <Text style={styles.info}>Experiência em Java, C#, .NET, React Native, e mais</Text>
       <Text style={styles.info}>Contato: gustavo.negrini7@gmail.com</Text>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity onPress={() => handlePress('https://www.linkedin.com/in/gustavonegrinim')} style={styles.iconButton}>
+          <Icon name="linkedin" size={30} color="#0077B5" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handlePress('https://github.com/gunegrini')} style={styles.iconButton}>
+          <Icon name="github" size={30} color="#333" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -44,6 +56,13 @@ const styles = StyleSheet.create({
     color: '#444',
     marginBottom: 10,
     textAlign: 'center',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+  iconButton: {
+    marginHorizontal: 10,
   },
 });
 

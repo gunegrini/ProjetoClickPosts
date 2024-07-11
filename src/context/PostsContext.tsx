@@ -3,7 +3,7 @@ import { Post } from '../types/Post';
 
 interface PostsContextProps {
   posts: Post[];
-  setPosts: (posts: Post[]) => void;
+  setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
   addPost: (post: Post) => void;
 }
 

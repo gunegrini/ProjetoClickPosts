@@ -8,6 +8,7 @@ interface LocalPostsContextProps {
   addLocalPost: (post: Post) => void;
   addLocalUser: (user: { id: number; name: string; email: string; phone: string }) => void;
   deleteLocalPost: (postId: number) => void;
+  setLocalPosts: React.Dispatch<React.SetStateAction<Post[]>>;
 }
 
 interface LocalPostsProviderProps {
@@ -54,7 +55,7 @@ export const LocalPostsProvider: React.FC<LocalPostsProviderProps> = ({ children
   };
 
   return (
-    <LocalPostsContext.Provider value={{ localPosts, localUsers, addLocalPost, addLocalUser, deleteLocalPost }}>
+    <LocalPostsContext.Provider value={{ localPosts, localUsers, addLocalPost, addLocalUser, deleteLocalPost, setLocalPosts }}>
       {children}
     </LocalPostsContext.Provider>
   );

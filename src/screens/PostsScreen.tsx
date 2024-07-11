@@ -10,8 +10,8 @@ import { useLocalPosts } from '../context/LocalPostsContext';
 const PostsScreen = () => {
   const [deletedPosts, setDeletedPosts] = useState<Set<number>>(new Set());
   const navigation = useNavigation<PostsScreenNavigationProp>();
-  const { posts, addPost } = usePosts();
-  const { localPosts, deleteLocalPost } = useLocalPosts();
+  const { posts, setPosts, addPost } = usePosts();
+  const { localPosts, deleteLocalPost, setLocalPosts } = useLocalPosts();
 
   useEffect(() => {
     fetchPosts();
@@ -20,11 +20,7 @@ const PostsScreen = () => {
   const fetchPosts = async () => {
     try {
       const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
-      response.data.forEach((post: Post) => {
-        if (!posts.find(p => p.id === post.id)) {
-          addPost(post);
-        }
-      });
+      response.data.forEach((post: Post) => addPost(post));
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
@@ -34,9 +30,11 @@ const PostsScreen = () => {
     try {
       await axios.delete(`https://jsonplaceholder.typicode.com/posts/${postId}`);
       setDeletedPosts(new Set(deletedPosts).add(postId));
-      deleteLocalPost(postId);
+      setPosts((prevPosts: Post[]) => prevPosts.filter((post: Post) => post.id !== postId));
+      setLocalPosts((prevLocalPosts: Post[]) => prevLocalPosts.filter((post: Post) => post.id !== postId));
     } catch (error) {
       console.error('Error deleting post:', error);
+      deleteLocalPost(postId); // Ensure local posts are deleted
     }
   };
 
@@ -62,10 +60,14 @@ const PostsScreen = () => {
     );
   }, [deletedPosts, navigation]);
 
+  const combinedPosts = [...localPosts, ...posts].filter(
+    (post, index, self) => post.id && self.findIndex(p => p.id === post.id) === index
+  );
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={[...localPosts, ...posts]}
+        data={combinedPosts}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
       />
